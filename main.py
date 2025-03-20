@@ -60,6 +60,42 @@ def main():
     asteroidfield = AsteroidField()
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     
+
+    def draw_play_again_button(screen):
+        button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 + 50, 100, 40)
+        pygame.draw.rect(screen,(255, 255, 255), button_rect)
+        font = pygame.font.Font(None, 24)
+        text = font.render("Play Again", True, (0, 0, 0))
+        text_rect = text.get_rect(center=button_rect.center)
+        screen.blit(text, text_rect)
+        return button_rect
+
+
+    #Game Over Screen and Functions
+    def gameOver(screen, clock):
+        font = pygame.font.Font(None, 80)
+        text = font.render("Game Over! Press Enter to play again", True, (255, 255, 255))
+        text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, 300))
+        screen.blit(text, text_rect)
+
+        play_again_button_rect = draw_play_again_button(screen)
+        pygame.display.flip()
+    
+        while True:
+            for event in pygame.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        main()
+                elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1: #left mouse button
+                        if play_again_button_rect.collidepoint(event.pos):
+                            main()
+                    
+
+
     while True:
         screen.fill((0,0,0))
         #add background after screenfill to show bg on top
