@@ -1,12 +1,35 @@
 import pygame
+import sys
+import json
 from constants import *
 from player import *
 from asteroid import *
 from asteroidfield import *
 from shot import *
-import sys
+from sounds import *
+
 def main():
     pygame.init()
+
+    #pygame.mixer.init()
+    #bg()
+    #loop_bg()
+
+    def load_high_score():
+        try:
+            with open("highscore.json", "r") as file:
+                return json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return 0
+    
+    
+
+    def save_high_score(score):
+        with open("highscore.json", "w") as file:
+            json.dump(score, file)
+    
+
+    hight_score = load_high_score()
 
     clock = pygame.time.Clock()
     dt = 0
@@ -19,9 +42,9 @@ def main():
 
 
     font = pygame.font.Font(None, 50)
-    score = 0
+    current_score = 0
     score_increment = 1
-    hight_score = 0
+    #hight_score = 0
     
     
     
@@ -40,8 +63,8 @@ def main():
     while True:
         screen.fill((0,0,0))
 
-        score_text = font.render(f"{score}", True, (54, 255, 142))
-        screen.blit(score_text, (SCREEN_WIDTH // 2, 20))
+        current_score_text = font.render(f"{current_score}", True, (54, 255, 142))
+        screen.blit(current_score_text, (SCREEN_WIDTH // 2, 20))
 
         hight_score_text = font.render(f"High Score: {hight_score}", True, (54, 255, 142))
         screen.blit(hight_score_text, (20, 20))
@@ -58,12 +81,13 @@ def main():
                 sys.exit()
             for shot in shots:
                 if asteroid.collisionCheck(shot):
-                    score += score_increment
+                    current_score += score_increment
                     asteroid.split()
                     shot.kill()
 
-        if score > hight_score:
-            hight_score = score
+        if current_score > hight_score:
+            hight_score = current_score
+            save_high_score(hight_score)
 
         pygame.display.flip()
         for event in pygame.event.get():
