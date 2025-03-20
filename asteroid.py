@@ -9,7 +9,7 @@ class Asteroid(CircleShape):
         self.radius = radius
 
     def draw(self, screen):
-        pygame.draw.circle(screen, (117,111,39), self.position, self.radius, 2)
+        pygame.draw.circle(screen, (255,162,0), self.position, self.radius)
 
         
     def split(self):

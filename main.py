@@ -39,7 +39,7 @@ def main():
     print(f"Screen height: {SCREEN_HEIGHT}")
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
+    bg = pygame.image.load("assets/trythisbg.jpg")
 
     font = pygame.font.Font(None, 50)
     current_score = 0
@@ -62,6 +62,9 @@ def main():
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     while True:
         screen.fill((0,0,0))
+        #add background after screenfill to show bg on top
+        screen.blit(bg, (0, 0))
+
 
         current_score_text = font.render(f"{current_score}", True, (54, 255, 142))
         screen.blit(current_score_text, (SCREEN_WIDTH // 2, 20))
