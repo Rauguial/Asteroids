@@ -16,6 +16,14 @@ def main():
     print(f"Screen height: {SCREEN_HEIGHT}")
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+
+    font = pygame.font.Font(None, 50)
+    score = 0
+    score_increment = 1
+    hight_score = 0
+    
+    
     
     asteroids = pygame.sprite.Group()
     updatable = pygame.sprite.Group()
@@ -32,6 +40,12 @@ def main():
     while True:
         screen.fill((0,0,0))
 
+        score_text = font.render(f"{score}", True, (54, 255, 142))
+        screen.blit(score_text, (SCREEN_WIDTH // 2, 20))
+
+        hight_score_text = font.render(f"High Score: {hight_score}", True, (54, 255, 142))
+        screen.blit(hight_score_text, (20, 20))
+
         for obj in drawable:
             obj.draw(screen)
     
@@ -44,10 +58,12 @@ def main():
                 sys.exit()
             for shot in shots:
                 if asteroid.collisionCheck(shot):
+                    score += score_increment
                     asteroid.split()
                     shot.kill()
 
-
+        if score > hight_score:
+            hight_score = score
 
         pygame.display.flip()
         for event in pygame.event.get():
