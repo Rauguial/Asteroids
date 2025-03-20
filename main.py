@@ -12,8 +12,7 @@ def main():
     pygame.init()
 
     #pygame.mixer.init()
-    #bg()
-    #loop_bg()
+    
 
     def load_high_score():
         try:
@@ -60,6 +59,7 @@ def main():
 
     asteroidfield = AsteroidField()
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    
     while True:
         screen.fill((0,0,0))
         #add background after screenfill to show bg on top
@@ -80,8 +80,10 @@ def main():
 
         for asteroid in asteroids:
             if asteroid.collisionCheck(player):
-                print("Game Over!")
-                sys.exit()
+                player.takeDamage(player, 1)
+                print(player.lives)
+                asteroid.kill()
+
             for shot in shots:
                 if asteroid.collisionCheck(shot):
                     current_score += score_increment

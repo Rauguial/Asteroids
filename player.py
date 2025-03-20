@@ -1,4 +1,5 @@
 import pygame
+import sys
 from constants import *
 from circleshape import *
 from shot import *
@@ -10,6 +11,7 @@ class Player(CircleShape):
         self.radius = PLAYER_RADIUS
         self.rotation = 0
         self.shoot_timer = 0
+        self.lives = PLAYER_HP
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -40,7 +42,13 @@ class Player(CircleShape):
         shot = Shot(position.x, position.y, SHOT_RADIUS)
         shot.velocity = pygame.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
         
-
+    def takeDamage(self, lives, damage):
+        
+        if self.lives > 0:
+            self.lives -= damage
+        if self.lives == 0:
+            print("Game Over")
+            sys.exit()
 
     def update(self, dt):
         if self.shoot_timer > 0:
