@@ -13,6 +13,7 @@ class Player(CircleShape):
         self.rotation = 0
         self.shoot_timer = 0
         self.lives = PLAYER_HP
+        self.bomb_cd = 0 #new
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -42,7 +43,16 @@ class Player(CircleShape):
 
         shot = Shot(position.x, position.y, SHOT_RADIUS)
         shot.velocity = pygame.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+
+    #new_try bombs
+    def drop_bomb(self, position):
+        if self.bomb_cd > 0:
+            return
         
+        self.bomb_cd = PLAYER_BOMB_CD
+        bomb = Bomb(position.x, position.y, BOMB_RADIUS)
+
+     
     def takeDamage(self, lives, damage):
         
         if self.lives > 0:
@@ -53,6 +63,7 @@ class Player(CircleShape):
    
 
     def update(self, dt):
+        self.bomb_cd -= dt
         if self.shoot_timer > 0:
             self.shoot_timer -= dt
 
@@ -68,5 +79,8 @@ class Player(CircleShape):
             self.move(dt * -1)
         if keys[pygame.K_SPACE]:
             self.shoot(self.position)
+        #new
+        if keys[pygame.K_LSHIFT]:
+            self.drop_bomb(self.position)
    
     

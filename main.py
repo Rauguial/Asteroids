@@ -13,10 +13,11 @@ from sounds import *
 #Initialize pygame
 pygame.init()
 
-#Setting screen size and background image
+#Setting screen size and background image, explosion
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 bg = pygame.image.load("assets/trythisbg.jpg")
-
+explosion_effect = pygame.image.load("assets/explosion0.png")
+explosion_effect = pygame.transform.scale(explosion_effect, (200, 200))
 #Set font 
 font = pygame.font.Font(None, 50)
     
@@ -47,6 +48,7 @@ def draw_play_again_button():
 #Game Over Screen and Functions
 def game_over_screen():
     screen.fill((0, 0, 0))
+    screen.blit(bg, (0, 0))
     text = font.render("Game Over! Press Enter to play again", True, (255, 255, 255))
     text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, 300))
     screen.blit(text, text_rect)
@@ -85,11 +87,13 @@ def main():
         updatable = pygame.sprite.Group()
         drawable = pygame.sprite.Group()
         shots = pygame.sprite.Group()
+        bombs = pygame.sprite.Group()
         #Setting up containers
         Player.containers = (updatable, drawable)
         Asteroid.containers = (asteroids, updatable, drawable)
         AsteroidField.containers = (updatable,)
         Shot.containers = (shots, updatable, drawable)
+        Bomb.containers = (bombs, updatable, drawable)
 
         #Defining asteroidfield and player + placing player in the middle of the screen
         asteroidfield = AsteroidField()
@@ -134,6 +138,25 @@ def main():
                         current_score += score_increment #Add to score for each time an asteroid is shot
                         asteroid.split()
                         shot.kill()
+
+                for bomb in bombs:
+                    if pygame.time.get_ticks() - bomb.spawn_time >= 5000: #5 seconds
+                        explode(bomb)
+                        bomb.kill()
+
+                def explode(bomb):
+                    screen.blit(explosion_effect, bomb.position)
+                    #print("Bomb exploded")
+                    explosion_radius = bomb.radius * 5
+                    #print(f"Explosion radius: {explosion_radius}")
+                    for asteroid in asteroids:
+                        if bomb.collisionCheck(asteroid, explosion_radius):
+                            #print("Asteroid hit!")
+                            asteroid.kill()
+
+                    if bomb.collisionCheck(player, explosion_radius):
+                        #print("Player hit!")
+                        player.takeDamage(player, 1)
 
             #Update highscore, and save it, if current score is higher than current highscore 
             if current_score > hight_score:
