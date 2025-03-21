@@ -3,7 +3,7 @@ import sys
 from constants import *
 from circleshape import *
 from shot import *
-from main import gameOver
+from main import game_over_screen
 #from main import *
 class Player(CircleShape):
     def __init__(self, x, y):
@@ -47,10 +47,8 @@ class Player(CircleShape):
         
         if self.lives > 0:
             self.lives -= damage
-        if self.lives == 0:
-            gameOver()
-            #print("Game Over")
-            #sys.exit()
+        #Dying is handled inside main.py
+            
 
    
 
